@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "HTML Document Outline Validator",
+  "version": "1.0",
+  "description": "Checks the syntatical validity of the current page's document outline.",
+  "permissions": ["scripting", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Validate Document Outline"
+  }
+}
