@@ -15,7 +15,7 @@ A Chromium browser extension to syntactically validate a page's heading usage (h
 1. Download this repository, unzip it, and save it somewhere on your filesystem
 2. Open your Chromium web browser
 3. Navigate to "Extensions" (Window > Extensions)
-4. Enable "Developer mode" (typically a toggle in the top-right corner of the Extensions page)
+4. Enable "Developer mode" if it's not already enabled (typically a toggle in the top-right corner of the Extensions page)
 5. Click the "Load Unpacked" button and open the unzipped directory
 
 ### How to Use
@@ -31,7 +31,7 @@ A Chromium browser extension to syntactically validate a page's heading usage (h
 It checks that heading elements follow the pattern outlined in the HTML Spec:
 
 - The first heading in a document must be an h1 or an h2
-- Each subsequent heading's level must be less than, equal to, or (at most) one greater greater than the preceding heading's level (e.g., no h3 followed by h5)
+- Each subsequent heading's level must be less than, equal to, or (at most) one greater than the preceding heading's level (e.g., no h3 followed by h5)
 
 Additionally it checks the widely accepted best practice that:
 
