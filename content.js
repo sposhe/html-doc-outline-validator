@@ -11,32 +11,41 @@
     const level = parseInt(heading.tagName.substring(1))
     const text = heading.textContent.trim()
     let isValid = true
-    let violationReason = ''
+    let violations = []
     if (level === 1) {
       h1Count++
       if (h1Count > 1) {
         isValid = false
-        violationReason = 'Only one <h1> is allowed on the page.'
+        violations.push('Only one <h1> is allowed on the page.')
       }
     }
     if (index === 0 && level > 2) {
       isValid = false
-      violationReason = 'The first heading must be <h1> or <h2>.'
+      violations.push('The first heading must be <h1> or <h2>.')
     }
     if (previousLevel !== null) {
       if (level > previousLevel + 1) {
         isValid = false
-        violationReason = `Heading level should not skip levels. Found <h${level}> after <h${previousLevel}>.`
+        violations.push(`Heading level should not skip levels. Found <h${level}> after <h${previousLevel}>.`)
       }
     }
     outline.push({
       level,
       text,
       isValid,
-      violationReason
+      violations
     })
     previousLevel = level
   })
+  // Check if page has no h1
+  if (h1Count === 0) {
+    outline.unshift({
+      level: 0,
+      text: 'Document Error',
+      isValid: false,
+      violations: ['The page must have at least one <h1> element.']
+    })
+  }
   // Create the modal window
   const modal = document.createElement('div')
   modal.id = 'outline-validator-modal'
@@ -58,7 +67,12 @@
     } else {
       li.className = 'invalid'
       const button = document.createElement('button')
-      button.textContent = `<h${item.level}> ${item.text} ⚠️`
+      // Handle document-level errors (level 0)
+      if (item.level === 0) {
+        button.textContent = `${item.text} ⚠️`
+      } else {
+        button.textContent = `<h${item.level}> ${item.text} ⚠️`
+      }
       button.setAttribute('aria-expanded', 'false')
       const violationId = `violation-message-${index}`
       button.setAttribute('aria-controls', violationId)
@@ -71,7 +85,8 @@
           message = document.createElement('div')
           message.className = 'violation-message'
           message.id = violationId
-          message.textContent = item.violationReason
+          // Display all violations
+          message.innerHTML = item.violations.map(v => `<div>${v}</div>`).join('')
           li.appendChild(message)
           button.setAttribute('aria-expanded', 'true')
         }
