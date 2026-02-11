@@ -6,7 +6,7 @@
   background: white;
   border: 2px solid #ccc;
   border-radius: 8px;
-  padding: 20px;
+  padding: 40px 20px 20px 20px;
   max-height: 80%;
   overflow-y: auto;
   z-index: 100000;
@@ -65,16 +65,19 @@
   right: 10px;
   cursor: pointer;
   font-size: 28px;
-  background: none;
-  border: none;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   padding: 5px 10px;
   line-height: 1;
   color: #666;
-  transition: color 0.2s;
+  transition: all 0.2s;
 }
 
 #outline-validator-modal .close-button:hover {
   color: #000;
+  background: #e0e0e0;
+  border-color: #ccc;
 }
 
 #outline-validator-modal .success-message {
