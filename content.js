@@ -41,26 +41,54 @@
   if (h1Count === 0) {
     outline.unshift({
       level: 0,
-      text: 'Document Error',
+      text: 'Missing h1.',
       isValid: false,
       violations: ['The page must have at least one <h1> element.']
     })
   }
+  // Create backdrop
+  const backdrop = document.createElement('div')
+  backdrop.id = 'outline-validator-backdrop'
+  backdrop.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99999;'
+
   // Create the modal window
   const modal = document.createElement('div')
   modal.id = 'outline-validator-modal'
+
+  // Function to close modal
+  const closeModal = () => {
+    backdrop.remove()
+    modal.remove()
+    document.removeEventListener('keydown', escapeHandler)
+  }
+
   // Close button
   const closeButton = document.createElement('button')
   closeButton.className = 'close-button'
   closeButton.innerHTML = '&times;'
-  closeButton.addEventListener('click', () => {
-    modal.remove()
-  })
+  closeButton.addEventListener('click', closeModal)
   modal.appendChild(closeButton)
+
+  // Close on backdrop click
+  backdrop.addEventListener('click', closeModal)
+
+  // Prevent modal content clicks from closing
+  modal.addEventListener('click', (e) => {
+    e.stopPropagation()
+  })
+
+  // Close on ESC key
+  const escapeHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeModal()
+    }
+  }
+  document.addEventListener('keydown', escapeHandler)
   const list = document.createElement('ul')
   outline.forEach((item, index) => {
     const li = document.createElement('li')
-    li.style.marginLeft = `${(item.level - 1) * 20}px`
+    // Handle spacing: level 0 (document-level) gets normal spacing, others get indentation
+    li.style.marginLeft = item.level === 0 ? '0px' : `${(item.level - 1) * 20}px`
     if (item.isValid) {
       li.className = 'valid'
       li.textContent = `<h${item.level}> ${item.text}`
@@ -85,8 +113,12 @@
           message = document.createElement('div')
           message.className = 'violation-message'
           message.id = violationId
-          // Display all violations
-          message.innerHTML = item.violations.map(v => `<div>${v}</div>`).join('')
+          // Display all violations with proper text escaping
+          item.violations.forEach(v => {
+            const violationDiv = document.createElement('div')
+            violationDiv.textContent = v
+            message.appendChild(violationDiv)
+          })
           li.appendChild(message)
           button.setAttribute('aria-expanded', 'true')
         }
@@ -96,5 +128,6 @@
     list.appendChild(li)
   })
   modal.appendChild(list)
+  document.body.appendChild(backdrop)
   document.body.appendChild(modal)
 })()
