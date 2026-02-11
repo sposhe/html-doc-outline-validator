@@ -1,4 +1,75 @@
 (function() {
+  // Function to compute accessible name from element contents
+  function getAccessibleNameFromContents(element) {
+    let name = ''
+
+    for (const node of element.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        name += node.textContent
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node
+
+        // Check for aria-labelledby
+        const labelledby = el.getAttribute('aria-labelledby')
+        if (labelledby) {
+          const ids = labelledby.trim().split(/\s+/)
+          const names = ids.map(id => {
+            const labelElement = document.getElementById(id)
+            return labelElement ? labelElement.textContent.trim() : ''
+          }).filter(n => n)
+          name += ' ' + names.join(' ')
+          continue
+        }
+
+        // Check for aria-label
+        const ariaLabel = el.getAttribute('aria-label')
+        if (ariaLabel) {
+          name += ' ' + ariaLabel
+          continue
+        }
+
+        // Handle images with alt text
+        if (el.tagName === 'IMG') {
+          const alt = el.getAttribute('alt')
+          if (alt !== null) {
+            name += ' ' + alt
+          }
+          continue
+        }
+
+        // Recursively get name from child elements
+        name += getAccessibleNameFromContents(el)
+      }
+    }
+
+    return name
+  }
+
+  // Function to compute the accessible name of an element
+  function getAccessibleName(element) {
+    // Check aria-labelledby first (highest priority)
+    const labelledby = element.getAttribute('aria-labelledby')
+    if (labelledby) {
+      const ids = labelledby.trim().split(/\s+/)
+      const names = ids.map(id => {
+        const labelElement = document.getElementById(id)
+        return labelElement ? labelElement.textContent.trim() : ''
+      }).filter(name => name)
+      if (names.length > 0) {
+        return names.join(' ')
+      }
+    }
+
+    // Check aria-label (second priority)
+    const ariaLabel = element.getAttribute('aria-label')
+    if (ariaLabel) {
+      return ariaLabel.trim()
+    }
+
+    // Compute from contents (fallback)
+    return getAccessibleNameFromContents(element).trim()
+  }
+
   const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'))
   if (headings.length === 0) {
     alert('No headings found on this page.')
@@ -9,7 +80,7 @@
   let previousLevel = null
   headings.forEach((heading, index) => {
     const level = parseInt(heading.tagName.substring(1))
-    const text = heading.textContent.trim()
+    const text = getAccessibleName(heading)
     let isValid = true
     let violations = []
     if (level === 1) {
