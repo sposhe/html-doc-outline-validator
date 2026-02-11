@@ -68,3 +68,13 @@
   background: none;
   border: none;
 }
+
+#outline-validator-modal .success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}

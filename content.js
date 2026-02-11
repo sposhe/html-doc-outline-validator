@@ -155,6 +155,16 @@
     }
   }
   document.addEventListener('keydown', escapeHandler)
+
+  // Check if all items are valid and show success message
+  const allValid = outline.every(item => item.isValid)
+  if (allValid) {
+    const successMessage = document.createElement('div')
+    successMessage.className = 'success-message'
+    successMessage.textContent = 'This webpage has a syntactically valid document outline.'
+    modal.appendChild(successMessage)
+  }
+
   const list = document.createElement('ul')
   outline.forEach((item, index) => {
     const li = document.createElement('li')
