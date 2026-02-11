@@ -15,7 +15,8 @@ A Chromium browser extension to syntactically validate a page's heading usage (h
 1. Download this repository, unzip it, and save it somewhere on your filesystem
 2. Open your Chromium web browser
 3. Navigate to "Extensions" (Window > Extensions)
-4. Click the "Load Unpacked" button and open the unzipped directory
+4. Enable "Developer mode" (typically a toggle in the top-right corner of the Extensions page)
+5. Click the "Load Unpacked" button and open the unzipped directory
 
 ### How to Use
 
