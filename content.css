@@ -64,9 +64,17 @@
   top: 5px;
   right: 10px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 28px;
   background: none;
   border: none;
+  padding: 5px 10px;
+  line-height: 1;
+  color: #666;
+  transition: color 0.2s;
+}
+
+#outline-validator-modal .close-button:hover {
+  color: #000;
 }
 
 #outline-validator-modal .success-message {
